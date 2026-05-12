@@ -3,10 +3,7 @@ pub mod mutex;
 
 #[cfg(test)]
 mod tests {
-    use crate::{
-        arc::ArcCreate,
-        mutex::{MutexCreate, MutexGuardWork, MutexWork},
-    };
+    use crate::mutex::{MutexCreate, MutexGuardWork, MutexWork};
 
     #[test]
     fn test_create_mutex() {
