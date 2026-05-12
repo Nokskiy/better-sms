@@ -1,8 +1,12 @@
+pub mod arc;
 pub mod mutex;
 
 #[cfg(test)]
 mod tests {
-    use crate::mutex::{MutexCreate, MutexGuardWork, MutexWork};
+    use crate::{
+        arc::ArcCreate,
+        mutex::{MutexCreate, MutexGuardWork, MutexWork},
+    };
 
     #[test]
     fn test_create_mutex() {
@@ -24,5 +28,20 @@ mod tests {
         });
 
         assert_eq!(*mutex.lock_unw(), result_var);
+    }
+
+    #[test]
+    fn test_arc() {
+        let variable = String::from("variable name");
+
+        let arc_mutex = variable.create_mutex();
+
+        let result_var = String::from("result variable name");
+
+        arc_mutex.lock_unw().use_guard(|guard| {
+            *guard = String::from("result variable name");
+        });
+
+        assert_eq!(*arc_mutex.lock_unw(), result_var);
     }
 }
