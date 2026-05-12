@@ -2,5 +2,8 @@
 name = "better-sms"
 version = "0.1.0"
 edition = "2024"
+authors = "Nokskiy"
+license = "MIT"
+description = "Better-sms (Better Shared Mutable State) is a lightweight and very small, but comfortable library for the Rust language, created to make it easier to work with shared mutable state."
 
 [dependencies]
