@@ -36,8 +36,24 @@ pub trait MutexGuardWork<'a, T> {
     ///     *guard = String::from("result variable name");
     /// });
     /// assert_eq!(*mutex.lock_unw(), result_var);
-    /// ``
-    fn use_guard<F: FnOnce(&mut T)>(&mut self, f: F);
+    /// ```
+    ///
+    /// Or
+    ///
+    /// ```
+    /// use crate::better_sms::mutex::{MutexWork, MutexCreate, MutexGuardWork};
+    ///
+    /// let variable = String::from("variable name");
+    /// let mutex = variable.create_mutex();
+    /// let result_var = String::from("result variable name");
+    ///
+    /// let result = mutex.lock_unw().use_guard(|guard| {
+    ///     *guard = String::from("result variable name");
+    ///     return guard.to_string();
+    /// });
+    /// assert_eq!(*mutex.lock_unw(), result_var);
+    /// ```
+    fn use_guard<O, F: FnOnce(&mut T) -> O>(&mut self, f: F) -> O;
 }
 
 impl<T> MutexCreate<T> for T {
@@ -53,7 +69,7 @@ impl<'a, T> MutexWork<'a, T> for Mutex<T> {
 }
 
 impl<'a, T> MutexGuardWork<'a, T> for MutexGuard<'a, T> {
-    fn use_guard<F: FnOnce(&mut T)>(&mut self, f: F) {
-        f(self);
+    fn use_guard<O, F: FnOnce(&mut T) -> O>(&mut self, f: F) -> O {
+        f(self)
     }
 }
