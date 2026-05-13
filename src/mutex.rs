@@ -16,12 +16,12 @@ pub trait MutexCreate<T> {
     fn create_mutex(self) -> Mutex<T>;
 }
 
-pub trait MutexWork<'a, T> {
+pub trait MutexWork<'a, T: ?Sized> {
     /// Shorthand for .lock().unwarp()
     fn lock_unw(&'a self) -> MutexGuard<'a, T>;
 }
 
-pub trait MutexGuardWork<'a, T> {
+pub trait MutexGuardWork<'a, T: ?Sized> {
     /// A feature that allows you to work with MutexGuard immediately
     ///
     /// # Examples
@@ -62,13 +62,13 @@ impl<T> MutexCreate<T> for T {
     }
 }
 
-impl<'a, T> MutexWork<'a, T> for Mutex<T> {
+impl<'a, T: ?Sized> MutexWork<'a, T> for Mutex<T> {
     fn lock_unw(&'a self) -> MutexGuard<'a, T> {
         self.lock().unwrap()
     }
 }
 
-impl<'a, T> MutexGuardWork<'a, T> for MutexGuard<'a, T> {
+impl<'a, T: ?Sized> MutexGuardWork<'a, T> for MutexGuard<'a, T> {
     fn use_guard<O, F: FnOnce(&mut T) -> O>(&mut self, f: F) -> O {
         f(self)
     }
